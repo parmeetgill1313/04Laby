@@ -3,7 +3,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -20,80 +19,62 @@ public class NewClass1 {
 
         String strin;
         String list[] = null;
-        String delim = "[ ;]+";
 
-        BufferedReader fin = new BufferedReader(new FileReader("labyrinthData.txt"));
+        String delim = "[  ]+";
+        int row, clms;
 
-        strin = fin.readLine();
+        int[][] mons;
+        BufferedReader in = new BufferedReader(new FileReader("labyrinthData.txt"));
 
+        strin = in.readLine();
         while (strin != null) {
-
-            int x = 0;
-            int y = 0;
-
             list = strin.split(delim);
+            row = Integer.parseInt(list[0]);
+            clms = Integer.parseInt(list[1]);
 
-            x = Integer.parseInt(list[0]);
-            y = Integer.parseInt(list[1]);
-
-            int[][] data = new int[x][y];
-            System.out.println("MAZE: ");
-            for (int i = 0; i < x; i++) {
-                for (int j = 0; j < y; j++) {
-                    System.out.print(data[i][j] + " ");
-                }
-                System.out.println("");
-            }
-            System.out.println("");
-
-            strin = fin.readLine();
-
+            strin = in.readLine();
             String monsterNum = strin;
 
-            System.out.println("# of Monster: " + monsterNum);
+            mons = new int[Integer.parseInt(monsterNum)][2];
 
-            strin = fin.readLine();
-//
-//            int xMon = 0;
-//            int yMon = 0;
-//
-//            list = strin.split(delim);
-//
-//            xMon = Integer.parseInt(list[0]);
-//            yMon = Integer.parseInt(list[1]);
-//
-//            data[xMon][yMon] = 1;
-//            System.out.println("MAZE: ");
-//            
-//            while (strin != null) {
-//                for (int i = 0; i < x; i++) {
-//                    for (int j = 0; j < y; j++) {
-//                        System.out.print(data[i][j] + " ");
-//                    }
-//                    System.out.println("");
-//                }
-//                System.out.println("");
-//
-//                strin = fin.readLine();
-//            }
+            for (int i = 0; i < mons.length; i++) {
+                strin = in.readLine();
+                list = strin.split(delim);
+                mons[i][0] = Integer.parseInt(list[0]);
+                mons[i][1] = Integer.parseInt(list[1]);
+            }
 
-//            int xMon = 0;
-//            int yMon = 0;
-//
-//            list = strin.split(delim);
-//
-//            xMon = Integer.parseInt(list[0]);
-//            yMon = Integer.parseInt(list[1]);
-//
-            //int[][] dataMon = new int[xMon][yMon];
-//
-//            for (int i = 0; i < xMon; i++) {
-//                for (int j = 0; j < yMon; j++) {
-//                    System.out.print(dataMon[i][j] + " ");
-//                }
-//                System.out.println("");
-//            }
-//            System.out.println("");
+            int[][] laby = new int[row][clms];
+
+            for (int i = 0; i < mons.length; i++) {
+                int r = mons[i][0] - 1;
+                int c = mons[i][1] - 1;
+                laby[r][c] = -1;
+            }
+            String maze = "";
+
+            for (int i = 0; i < laby.length; i++) {
+                for (int j = 0; j < laby[0].length; j++) {
+                    if (laby[i][j] == -1) {
+                        maze += "m ";
+                    } else if (i == 0 && j == 0) {
+                        maze += "s ";
+                    } else if (i == laby.length - 1 && j == laby[0].length - 1) {
+                        maze += "e ";
+                    } else {
+                        maze += "o ";
+                    }
+                }
+                maze += "\n";
+            }
+            
+            Pathfinder p = new Pathfinder(row, clms);
+            
+            System.out.println(p.paths(laby) + " ways of solving the following maze:");
+            System.out.println(maze);
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            strin = in.readLine();
         }
+
     }
 }
